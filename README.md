@@ -3,7 +3,7 @@
 
 The repository contains code referred to the work:
 
-### Adversarial Malwares Can Be Both Evasive and Deceiving: a Gradient-based Attack Against Prediction and Explainability in Windows PE Malware Detection
+### Adversarial Malware Can Be Both Evasive and Deceiving: a Gradient-based Attack Against Prediction and Explainability in Windows PE Malware Detection
 
 Please cite our work if you find it useful for your research and work.
 
@@ -54,6 +54,7 @@ Modify the arguments inside the config.conf file, if necessary, before running a
 
 ## Data
 SHA256 hashes of the Windows PE files used in the experiment are reported in the files malwares_sha256.txt and goodware_sha256.txt under the folder named samples.  
+
 
 
 
