@@ -31,14 +31,14 @@ Modify the arguments inside the config.conf file, if necessary, before running a
 * output_folder: output folder where the adversarials will be saved
 * n_steps: number of optimization steps
 * patience: early stopping patience
-* lr: optimizer learning rate
+* lr: optimizer learning rate  
 [BOXPLOT_SINGLE] - For boxplot of a single generation report
-* report_path = path to the csv report file
+* report_path = path to the csv report file  
 [BOXPLOT_MULTIPLE] - For boxplot of the three generation reports
-* m1/m2/m3_report_path = path to the csv report files
+* m1/m2/m3_report_path = path to the csv report files  
 [VIRUSTOTAL] - For the file submission and analysis to VirusTotal
 * api_key: the VirusTotal API key
-* src: the file folder to scan
+* src: the file folder to scan  
 
 ### Scripts descriptions 
 * __run_experiment.py__ : script to run the adversarial malware creation and transferability test. 
@@ -50,6 +50,7 @@ Modify the arguments inside the config.conf file, if necessary, before running a
 
 ## Data
 SHA256 hashes of the Windows PE files used in the experiment are reported in the files malwares_sha256.txt and goodware_sha256.txt under the folder named samples.  
+
 
 
 
