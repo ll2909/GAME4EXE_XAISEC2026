@@ -1,7 +1,7 @@
-torch
-pefile
-numpy
-pandas
-plotly
-tqdm
-vt-py
+torch==2.7.1+cu128
+pefile==2024.8.26
+numpy==1.26.4
+pandas==2.2.3
+plotly==6.3.1
+tqdm==4.60.0
+vt-py==0.21.0
