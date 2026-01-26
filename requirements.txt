@@ -1,0 +1,7 @@
+torch
+pefile
+numpy
+pandas
+plotly
+tqdm
+vt-py
