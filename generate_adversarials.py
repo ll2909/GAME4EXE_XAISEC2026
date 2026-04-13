@@ -3,9 +3,10 @@ import time
 import torch
 import pandas as pd
 import explainers.SimpleGradients as grad
-from models import BBDNN
+from models import BBDNN, OriginalMalConv
 from GAME4EXE import DOSHeaderXAIEvasion
 from preprocessing.FilePreprocessor import load_and_preprocess_file
+from copy import deepcopy
 
 
 seed = 42
@@ -19,14 +20,21 @@ def generate_adversarials(conf : dict):
     target_path = conf["target_path"]
     output_folder = conf["output_folder"]
     if not os.path.exists(output_folder):
-        os.mkdir(output_folder)
+        os.makedirs(output_folder)
     n_steps = int(conf["n_steps"])
     patience = int(conf["patience"])
     lr = float(conf["lr"])
+    model_selection = str(conf["model"])
 
+    if model_selection == "bbdnn":
+        print("Loading BBDNN")
+        model = BBDNN.load_model("./models/BBDNN_model.pth").eval().to(device)
+        input_size = 102_400
+    else:
+        print("Loading MalConv")
+        model = OriginalMalConv.load_model("./models/original_malconv_model.pth").eval().to(device)
+        input_size = 2**20
 
-    model = BBDNN.load_model("./models/BBDNN_model.pth").eval().to(device)
-    input_size = 102_400
     explainer = grad.SimpleGradients(model)
 
 
@@ -41,7 +49,7 @@ def generate_adversarials(conf : dict):
         lambda_x = [1 - l for l in lambda_p]
         
 
-    attack = DOSHeaderXAIEvasion(model, softplus_beta=10.0)
+    attack = DOSHeaderXAIEvasion(deepcopy(model), softplus_beta=10.0)
     print("----- ORIGINAL TARGET MODEL -----")
     print(model)
 
@@ -54,8 +62,10 @@ def generate_adversarials(conf : dict):
     malwares_to_manipulate = []
     for f in malware_list:
         m, _ = load_and_preprocess_file(os.path.join(malware_path, f), max_dim=input_size)
-
-        m_conf = model(m.to(device), is_embedded = False).item()
+        m = m.to(device)
+        with torch.no_grad():
+            m = model.embed(m)
+            m_conf = model(m.to(device), is_embedded = True).item()
         m_p = 0 if m_conf <= 0.5 else 1
         print("Malware %s prediction: %i, confidence: %f" % (f, m_p, m_conf))
         if m_p == 1:
@@ -162,7 +172,7 @@ def generate_adversarials(conf : dict):
     if not os.path.exists("./reports/"):
         os.mkdir("./reports/")
     df = pd.DataFrame(gen_report)
-    report_filename = f"./reports/generation_{mode}_{int(time.time())}.csv"
+    report_filename = f"./reports/generation_{model_selection}_{mode}_{int(time.time())}.csv"
     df.to_csv(report_filename, index=False)
     print("Done.")
 
