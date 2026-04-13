@@ -14,14 +14,26 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def transferability_test(conf : dict):
     advs_path = conf["output_folder"]
+    samples = os.listdir(conf["malware_path"])
+    model_selection = conf["model"]
+    mode = conf["mode"]
 
-    model = OriginalMalConv.load_model("./models/original_malconv_model.pth").eval().to(device)
-    input_size = 2**20
+    if model_selection == "bbdnn":
+        print("Transferibility test against MalConv")
+        model = OriginalMalConv.load_model("./models/original_malconv_model.pth").eval().to(device)
+        input_size = 2**20
+        target_model = "malconv"
+    else:
+        print("Transferibility test against BBDNN")
+        model = BBDNN.load_model("./models/BBDNN_model.pth").eval().to(device)
+        input_size = 102_400
+        target_model = "bbdnn"
 
     report = {
-        "filename" : [],
-        "prediction" : []
+        "filename" : samples,
+        "prediction" : [-1 for _ in range(len(samples))]
         }
+    report = pd.DataFrame(report)
 
 
     for adv in os.listdir(advs_path):
@@ -32,8 +44,7 @@ def transferability_test(conf : dict):
         adv_pred = 0 if adv_conf < 0.5 else 1
         print("Adversarial predicion: %i  -  Condifence:  %f" % (adv_pred, adv_conf))
 
-        report["filename"].append(adv)
-        report["prediction"].append(adv_pred)
+        report.loc[(report["filename"] == adv), "prediction"] = adv_pred
 
         torch.cuda.empty_cache()
 
@@ -41,9 +52,8 @@ def transferability_test(conf : dict):
     # Report creation
     if not os.path.exists("./reports/"):
         os.mkdir("./reports/")
-    df = pd.DataFrame(report)
-    report_filename = f"./reports/transferibility_bbdnn_to_malconv_{int(time.time())}.csv"
-    df.to_csv(report_filename, index=False)
+    report_filename = f"./reports/transferibility_{model_selection}_to_{target_model}_{mode}_{int(time.time())}.csv"
+    report.to_csv(report_filename, index=False)
     print("Done.")
 
     
