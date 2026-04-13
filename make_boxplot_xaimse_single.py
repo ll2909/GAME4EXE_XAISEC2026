@@ -4,12 +4,15 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 from configparser import ConfigParser
+import sys
 
 
 if __name__ == "__main__":
+    path = sys.argv[1]
+    print("Config path: ", path)
 
     cfg_parser = ConfigParser()
-    cfg_parser.read("config.conf")
+    cfg_parser.read(path)
     config = dict(cfg_parser["BOXPLOT_SINGLE"])
     report_path = config["report_path"]
     
@@ -19,9 +22,6 @@ if __name__ == "__main__":
 
     success = report[report["prediction"] == 0]
     print("Success rate: %f - [%i/%i]" % (len(success)/n_samples, len(success), n_samples))
-
-    effective_m1 = success[success["expl_mse_adv-target"] < success["expl_mse_orig-adv"]]
-    print("Effectively manipulated samples: %f - [%i/%i]" % (len(effective_m1)/len(success), len(effective_m1), len(success)))
 
     max_value = max(max(success["expl_mse_orig-target"]), max(success["expl_mse_adv-target"]))
 
