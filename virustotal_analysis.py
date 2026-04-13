@@ -6,6 +6,7 @@ import hashlib
 from tqdm import tqdm
 import pickle
 from configparser import ConfigParser
+import sys
 
 
 def scan_file(file_path, api_key):
@@ -71,9 +72,11 @@ def get_file_info(file_path, api_key):
 
 
 if __name__ == "__main__":
+    path = sys.argv[1]
+    print("Config path: ", path)
 
     cfg_parser = ConfigParser()
-    cfg_parser.read("config.conf")
+    cfg_parser.read(path)
     config = dict(cfg_parser["VIRUSTOTAL"])
     src = config["src"]
     print("Selected folder: %s" % src)
@@ -83,8 +86,8 @@ if __name__ == "__main__":
     fnames = os.listdir(src)
     print("Number of files: %i" % len(fnames))
 
-    if os.path.exists("./reports/vt_analysis_temp.pkl"):
-        detection = pickle.load(open("./reports/vt_analysis_temp.pkl", "rb"))
+    if os.path.exists("./reports/vt/vt_analysis_temp.pkl"):
+        detection = pickle.load(open("./reports/vt/vt_analysis_temp.pkl", "rb"))
         fnames = os.listdir(src)[len(detection["vt_detections"]):]
         print("State recovered.")
     else:
