@@ -51,7 +51,7 @@ Modify the arguments inside the config.conf file, if necessary, before running a
 * __make_bytexaimse_plot.py__ : for creating the average ByteXAIMse plot
 * __virustotal_analysis.py__ : for submitting and analyzing malware/adversarial files to VirusTotal (requires VT API key)
 
-### Command example
+### How to run: execute the script followed by config filename (as shown in the following example)
 python run_experiment.py config.conf
 
 ## Data
