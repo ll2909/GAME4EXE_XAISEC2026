@@ -51,6 +51,8 @@ Modify the arguments inside the config.conf file, if necessary, before running a
 * __make_bytexaimse_plot.py__ : for creating the average ByteXAIMse plot
 * __virustotal_analysis.py__ : for submitting and analyzing malware/adversarial files to VirusTotal (requires VT API key)
 
+### Command example
+python run_experiment.py config.conf
 
 ## Data
 SHA256 hashes of the Windows PE files used in the experiment are reported in the files malwares_sha256.txt and goodware_sha256.txt under the folder named samples.  
