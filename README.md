@@ -57,6 +57,9 @@ python run_experiment.py config.conf
 ## Data
 SHA256 hashes of the Windows PE files used in the experiment are reported in the files malwares_samples_sha256.txt and the respective target goodware sha256 for each model under the "samples" folder.  
 
+## License
+This work is under Attribution-NonCommercial-ShareAlike 4.0 International license. More information on LICENSE.md.
+
 
 
 
